@@ -40,7 +40,9 @@
  .c-media{display:flex;flex-wrap:wrap;gap:8px;align-content:flex-start}
  .thumb{position:relative;width:calc(50% - 4px);aspect-ratio:4/3;border-radius:8px;overflow:hidden;cursor:pointer;border:1px solid #e6e0d4;background:#f6f8f3}
  .thumb img{width:100%;height:100%;object-fit:cover;display:block} .thumb:hover{outline:2px solid var(--orange)}
- .thumb.vid::after{content:"\25B6";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:26px;text-shadow:0 1px 4px #000}
+ .thumb .playbtn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:28px;text-shadow:0 1px 5px #000;pointer-events:none}
+ .thumb .vidbg{width:100%;height:100%;background:#2b2b26}
+ .thumb .vidlabel{position:absolute;bottom:4px;left:0;right:0;text-align:center;color:#fff;font-size:10px;letter-spacing:.04em;text-shadow:0 1px 3px #000;pointer-events:none}
  .mnone{color:#ccc}
  .mnote{color:#b5610a;background:#fff3e3;border:1px dashed #f0b878;border-radius:8px;padding:8px 10px;font-size:12px;font-style:italic}
  .lb{position:fixed;inset:0;background:rgba(20,18,14,.92);z-index:100;display:none;align-items:center;justify-content:center}
@@ -1811,7 +1813,12 @@
  var tb=document.getElementById('tb');
  tb.innerHTML=DATA.map(function(r){
    var mediaCell;
-   if(r.media&&r.media.length){ mediaCell=r.media.map(function(m,j){return '<div class="thumb '+(m.t==='video'?'vid':'')+'" data-i="'+j+'"><img src="'+(m.poster||m.s)+'" loading="lazy"></div>';}).join(''); }
+   if(r.media&&r.media.length){ mediaCell=r.media.map(function(m,j){
+     var inner;
+     if(m.t==='video'){ inner=(m.poster?'<img src="'+m.poster+'" loading="lazy">':'<div class="vidbg"></div>')+'<span class="playbtn">\u25B6</span><span class="vidlabel">\u89c6\u9891 video</span>'; }
+     else { inner='<img src="'+m.s+'" loading="lazy">'; }
+     return '<div class="thumb'+(m.t==='video'?' vid':'')+'" data-i="'+j+'">'+inner+'</div>';
+   }).join(''); }
    else if(r.mediaNote){ mediaCell='<span class="mnote">'+esc(r.mediaNote)+'</span>'; }
    else { mediaCell='<span class="mnone">\u2014</span>'; }
    var defChips=defsOf(r).map(function(d){return '<span class="chip">'+esc(d)+'</span>';}).join('');
